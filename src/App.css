@@ -43,3 +43,14 @@
   background-size: cover;
   background-position: center;
 }
+
+.page-name {
+  margin: 5px;
+  text-decoration-line: none;
+}
+.page-name:link {
+  color: gray;
+}
+.page-name:visited {
+  color: gray;
+}
