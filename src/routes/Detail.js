@@ -1,8 +1,10 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import styled from "styled-components"
 import {Nav} from 'react-bootstrap';
 
+// Context API 5. Context API를 사용하기 위해 보관함을 import한다.
+import  {Context1}  from "../App";
 
 // 위와 같이 styled components를 사용하면,
 // 해당 스타일이 다른 js로 오염되지 않는다.
@@ -23,12 +25,16 @@ let YellowBtn = styled.button`
 
 function Detail(props){
 
+
+
     let [count,setCount] = useState(0)
     let [alert2,setAlert2] = useState(true)
 
     let [num,setNum] = useState("")
 
     let [tab,setTab] = useState(0)
+
+    let [fade, setFade] = useState("")
 
     useEffect(()=>{
         let a = setTimeout(() => {
@@ -41,6 +47,7 @@ function Detail(props){
         if (isNaN(num)) {
             alert("숫자만 쓰세요")
         }
+            // useEffect속의 return ()=>{}은 clean up function이라 한다.
         return ()=>{
             console.log(1)
             // 보통 기존의 코드를 제거 해둘때 자주 사용한다.(clean up fn)
@@ -84,8 +91,12 @@ function Detail(props){
     let {id} = useParams();
     let nowshoes = props.shoes.find((value)=>value.id==id);
 
+    useEffect(()=>{
+        setFade("end")
+    },[])
+
     return(
-        <div className="container">
+        <div className={`container start ${fade}`}>
             {alert2?
             <div className="alert alert-warning">
                 2초 이내 구매시 할인
@@ -128,16 +139,46 @@ function Detail(props){
                 </Nav.Item>
             </Nav>
 
-            <Tab tab={tab}/>
+            <TabContent tab={tab} shoes={props.shoes}/>
 
         </div> 
     )
 }
 
-function Tab({tab}) {
+function TabContent({tab}) {
     // 위처럼 중괄호안에 props를 전달하면 아래에 props를 입력하지않아도 된다.
+    
+    // props가 아래 컴포넌트들로 계속해서 중첩되는것이 비효율적일 경우,
+    // 1. Context API (리액트 기본문법) (많은 이슈들로 잘 사용하지 않음.)
+    // 2. Redux (라이브러리)
+    let [fade,setFade] = useState("");
+
+
+    // Context API 6. useContext(만든보관함)을 입력함으로
+    // 상위 state를 사용할 수 있게 함.
+    // useContext는 쉽게 말해 보관함을 해체해주는 역할
+    let {재고, shoes} = useContext(Context1);
+
+    useEffect(()=>{
+        setTimeout(() => {
+            setFade("end");
+        }, 100);
+
+        // state(tab)가 변경될때마다 코드를 실행시켜야하므로 useEffect사용
+        return ()=>{
+            setFade("")
+        }
+        // 위와같이 따로 실행시키는 이유는
+        // 리액트는 state변경이 한번에 실행시켜진 뒤 재랜더링 되기때문에
+        // (automatic batching) 시간차를 주어 의도대로 실행되게 한다.
+    },[tab])
+    
     return(
-        [<div>내용1</div>,<div>내용2</div>,<div>내용3</div>][tab]
+        // 변수를 문자 중간에 넣으려면 {}넣는다는 점 기억하기
+        <div className={`start ${fade}`}>
+            {/* Context API 확인 */}
+            {[<div>{재고[0]}</div>,<div>내용2</div>,<div>내용3</div>][tab]}
+        </div>
     )
     // if (tab == 0) {
     //     return (<div>내용1</div>)
@@ -147,5 +188,16 @@ function Tab({tab}) {
     //     return (<div>내용3</div>)
     // }
 }
+
+// 전환애니메이션 만들기 4단계
+// 1. 애니메이션 동작 전 className 만들기 (css)
+// 2. 애니메이션 동작 후 className 만들기
+// 3. className에 transition 속성 추가
+// 4. 원할 때 2번 className 부착
+
+// Context API
+// state변경시 쓸데없는것까지 모두 재랜더링하는 것(성능이슈)
+// 나중에 다른 페이지에서 해당 컴포넌트를 import하거나 하면 꼬이기 쉬움.
+// 위와 같은 이유로 Context API는 잘 사용되지 않고 Redux 등을 사용한다.
 
 export default Detail;

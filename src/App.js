@@ -2,7 +2,7 @@ import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Button,Container,Nav,Navbar} from 'react-bootstrap';
 import bgImg from "./img/bg.png"
-import { useState } from 'react';
+import { createContext, useState } from 'react';
 
 // 낱개일 경우 import하는 법
 // import {변수} from './data'
@@ -16,6 +16,14 @@ import Detail from './routes/Detail';
 import axios from "axios"
 import Loading from "./loading/Loading"
 
+// Redux
+import Cart from './routes/Cart';
+// redux사용시 store.js 파일을 생성해 주어야한다.
+
+
+// Context API 1. 함수 외부에 아래와 같이 state보관함을 만들어준다.
+// 추가로 외부에서 사용해야하므로 export를 해둔다.
+export let Context1 = createContext()
 
 
 function App() {
@@ -30,6 +38,10 @@ function App() {
   let [count,setCount] = useState(1);
   let [loading,setLoading] = useState(false);
 
+  
+  // Context API (아래의 state를 Detail내부의 TabContent에서 사용)
+  let [재고] = useState([10,11,12])
+
   return (
     <div className="App">
 
@@ -42,6 +54,7 @@ function App() {
             {/* useNavigate 사용법 */}
             <Nav.Link onClick={()=>{navigate("/detail")}}>상세페이지</Nav.Link>
             <Nav.Link onClick={()=>{navigate("/about")}}>정보</Nav.Link>
+            <Nav.Link onClick={()=>{navigate("/cart")}}>장바구니</Nav.Link>
             <Nav.Link onClick={()=>{navigate(-1)}}>뒤로</Nav.Link>
           </Nav>
         </Container>
@@ -130,7 +143,15 @@ function App() {
           
 
         {/* :id는 /detail/아무거나 라는 뜻 (URL파라미터라고 함) */}
-        <Route path='/detail/:id' element={<Detail shoes={shoes}/>}/>
+        <Route path='/detail/:id' element={
+          // Context API 2. 작성한 state보관함으로 해당 컴포넌트를 감싼다.
+          // (<보관함명.Provider>와 같이 작성)
+          // Context API 3. 보관함에 value속성을 열어,
+          // 공유를 원하는 state를 {}안에 집어넣어 준다.
+          <Context1.Provider value={{재고}}>
+            <Detail shoes={shoes}/>
+          </Context1.Provider>
+        }/>
 
         {/* 404페이지 만들기 */}
         <Route path='*' element={<div>없는페이지입니다</div>}/>
@@ -147,6 +168,10 @@ function App() {
         <Route path='/event' element={<Event/>}>
           <Route path='one' element={<div>양배추즙</div>}/>
           <Route path='two' element={<div>생일쿠폰</div>}/>
+        </Route>
+        
+        <Route path='/cart' element={<Cart/>}>
+
         </Route>
 
       </Routes>

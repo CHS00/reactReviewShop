@@ -5,12 +5,19 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import {BrowserRouter} from "react-router-dom"
 
+// redux사용 시 import할 것
+import { Provider } from 'react-redux';
+import store from './store';
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-
+  <Provider store={store}>
     <BrowserRouter>
       <App />
     </BrowserRouter>
+  </Provider>
+  // 위와 같이 사용함으로 store.js에 있던 state를
+  // App 내에서 사용 가능하게 함.
 
 );
 

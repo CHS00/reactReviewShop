@@ -54,3 +54,14 @@
 .page-name:visited {
   color: gray;
 }
+
+/* 전환애니메이션 */
+.start {
+  opacity: 0;
+}
+
+.end {
+  opacity: 1;
+  transition: opacity 0.5s;
+  /* opacity가 변경될때 0.5초에 걸쳐서 변경되게 하는 코드 */
+}
