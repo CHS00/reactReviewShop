@@ -6,6 +6,9 @@ import {Nav} from 'react-bootstrap';
 // Context API 5. Context API를 사용하기 위해 보관함을 import한다.
 import  {Context1}  from "../App";
 
+import { useDispatch } from "react-redux";
+
+import { addProd } from "../store";
 // 위와 같이 styled components를 사용하면,
 // 해당 스타일이 다른 js로 오염되지 않는다.
 // 또한 페이지 로딩시간도 단축시켜준다.
@@ -95,6 +98,8 @@ function Detail(props){
         setFade("end")
     },[])
 
+    let dispatch = useDispatch()
+
     return(
         <div className={`container start ${fade}`}>
             {alert2?
@@ -123,7 +128,10 @@ function Detail(props){
                     <h4 className="pt-5">{nowshoes.title}</h4>
                     <p>{nowshoes.content}</p>
                     <p>{nowshoes.price}</p>
-                    <button className="btn btn-danger">주문하기</button> 
+                    <button className="btn btn-danger" onClick={()=>{
+                        dispatch(addProd(nowshoes));
+                        console.log(nowshoes)
+                    }}>주문하기</button> 
                 </div>
             </div>
 
