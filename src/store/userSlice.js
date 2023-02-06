@@ -30,7 +30,6 @@ let user = createSlice({
       // 이처럼 하면 dispatch(plusAge(10))라 했을때, 10씩 더해줄 수 있다.
       // (여담으로 dispatch(메세지를 보내다)로 함수를 보내달라 요청하면,
       // payload(화물)과 함께 함수를 보내는것이라 외울 것)
-      console.log(state)
     }
   }
 })

@@ -6,9 +6,9 @@ import {Nav} from 'react-bootstrap';
 // Context API 5. Context API를 사용하기 위해 보관함을 import한다.
 import  {Context1}  from "../App";
 
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
-import { addProd } from "../store";
+import { addProd, addWatched } from "../store";
 // 위와 같이 styled components를 사용하면,
 // 해당 스타일이 다른 js로 오염되지 않는다.
 // 또한 페이지 로딩시간도 단축시켜준다.
@@ -76,7 +76,7 @@ function Detail(props){
 
     // 보통은 어려운 연산이나 서버에서 데이터를 가져오는 작업,
     // 타이머 장착 등에 사용한다.
-    console.log("안녕")
+    // console.log("안녕")
 
     // useEffect를 정리하자면,
     // useEffect(()=>{  }) 1.재랜더링마다 코드를 실행하고 싶은 경우.
@@ -99,6 +99,14 @@ function Detail(props){
     },[])
 
     let dispatch = useDispatch()
+
+    useEffect(()=>{
+        let putout = localStorage.getItem("watched")
+        putout = JSON.parse(putout)
+        putout.push(nowshoes.id);
+        putout = [...new Set(putout)];
+        localStorage.setItem("watched", JSON.stringify(putout))
+    },[])
 
     return(
         <div className={`container start ${fade}`}>
@@ -208,4 +216,10 @@ function TabContent({tab}) {
 // 나중에 다른 페이지에서 해당 컴포넌트를 import하거나 하면 꼬이기 쉬움.
 // 위와 같은 이유로 Context API는 잘 사용되지 않고 Redux 등을 사용한다.
 
+
+// 개발자도구
+// react developer tools
+// props, state확인에 용이, 딜레이 발생점 탐색가능
+// redux devtools
+// state 실시간 변경 확인에 용이
 export default Detail;

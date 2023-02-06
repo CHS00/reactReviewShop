@@ -17,21 +17,21 @@ let cart = createSlice({
   ] ,
   reducers:{
     plusCount(state, action){
-      let now = state.find((value)=>value.id==action.payload);
+      let now = state.find((value)=>value.id===action.payload);
       now.count += 1
     },
     minusCount(state, action){
-      let num = state.findIndex((value)=>value.id==action.payload);
+      let num = state.findIndex((value)=>value.id===action.payload);
       state[num].count --
     },
     deleteProd(state, action){
-      let num = state.findIndex((value)=>value.id==action.payload);
+      let num = state.findIndex((value)=>value.id===action.payload);
       state.splice(num,1)
     },
 
     addProd(state,action){
-      if (state.some((value)=>value.id==action.payload.id)) {
-        let num = state.findIndex((value)=>value.id==action.payload.id);
+      if (state.some((value)=>value.id===action.payload.id)) {
+        let num = state.findIndex((value)=>value.id===action.payload.id);
         state[num].count ++
       }else{
         state.push({
@@ -46,6 +46,7 @@ let cart = createSlice({
 
 export let {plusCount,minusCount,addProd,deleteProd} = cart.actions;
 
+
 export default configureStore({
   reducer: {
     // createSlice에서 만든 state는 이곳에 등록을 해야 사용 가능하다.
@@ -54,7 +55,7 @@ export default configureStore({
     // 위 state를 cart라는 컴포넌트에서 쓴다.
 
     stock : stock.reducer,
-    cart : cart.reducer
+    cart : cart.reducer,
   }
 }) 
 
